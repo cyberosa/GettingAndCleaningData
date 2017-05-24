@@ -1,12 +1,22 @@
 # Merge the training and test data sets into one, always in the same order
 # first the train data and second the test data
+
+# function to read the description of an activity given its ID
+getActivityDescription <- function(labels,id){
+    return(labels[id,"activityDescription"])
+}
+
 run_analysis <- function(){
+    library(plyr)
+    library(dplyr)
+    library(stringr)
+    library(tidyr)
     # ***************************** STEP 1 ********************************
     # read  the subjects
     subjectTrain <- read.table("./train/subject_train.txt",sep = "\t")
     subjectTest <- read.table("./test/subject_test.txt",sep = "\t")
     subjects <- rbind(subjectTrain,subjectTest)
-    subjects <- rename(subjects,subjectID = V1)
+    subjects <- rename(subjects,c(V1 = "subjectID"))
     
     # data sets
     setTraining <- read.table("./train/X_train.txt",sep="\t",strip.white=TRUE)
@@ -24,7 +34,7 @@ run_analysis <- function(){
     labelsTest <- read.table("./test/y_test.txt",sep="\t")
     labelsTrain <- read.table("./train/y_train.txt",sep="\t")
     activities <- rbind(labelsTrain,labelsTest)
-    activities <- rename(activities, activityID = V1)
+    activities <- rename(activities,c(V1 = "activityID"))
     # read the activity labels
     activityLabels <- read.table("./activity_labels.txt",sep="\t",stringsAsFactors=FALSE)
     # let's separate the id of the description
@@ -36,7 +46,7 @@ run_analysis <- function(){
     activityLabels$activityID <- parse_number(activityLabels$activityID)
     # Add the activity description to the activities data frame based 
     # in the information from the activityLabels data frame
-    activities <- mutate(activities, description=getActivityDescription(activities$activityID))
+    activities <- mutate(activities, description=getActivityDescription(activityLabels,activities$activityID))
     
     # ***************************** STEP 2 AND 4 ********************************
     # feature names, length = 561
@@ -60,10 +70,6 @@ run_analysis <- function(){
     # ***************************** STEP 5 ********************************
     groupedData <- group_by(finalData, activity,subjectID)
     meanData <- summarize_each(groupedData,funs(mean))
-    write.table(meanData,file="MeanData.txt",row.names = FALSE)
+    write.table(meanData,file="./MeanData.txt",row.names = FALSE)
 }
 
-# function to read the description of an activity given its ID
-getActivityDescription <- function(id){
-    return(activityLabels[id,"activityDescription"])
-}
