@@ -9,13 +9,7 @@ The assignment includes the following files:
 
 Dependencies
 ============
-To run the script it is needed the full Dataset about 
+To run the script it is needed to set the working directory to the one where you downloaded all files.
 
-Human Activity Recognition Using Smartphones
-Version 1.0
-
-available in https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip .
-
-Read the README.txt file from the zip file for more detailed information about the data used in this assignment.
 
 
