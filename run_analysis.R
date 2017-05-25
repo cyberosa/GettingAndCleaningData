@@ -1,5 +1,3 @@
-# Merge the training and test data sets into one, always in the same order
-# first the train data and second the test data
 
 # function to read the description of an activity given its ID
 getActivityDescription <- function(labels,id){
@@ -7,16 +5,18 @@ getActivityDescription <- function(labels,id){
 }
 
 run_analysis <- function(){
-    library(plyr)
     library(dplyr)
     library(stringr)
     library(tidyr)
+    library(readr)
     # ***************************** STEP 1 ********************************
+    # Merge the training and test data sets into one, always in the same order
+    # first the train data and second the test data
     # read  the subjects
     subjectTrain <- read.table("./train/subject_train.txt",sep = "\t")
     subjectTest <- read.table("./test/subject_test.txt",sep = "\t")
     subjects <- rbind(subjectTrain,subjectTest)
-    subjects <- rename(subjects,c(V1 = "subjectID"))
+    subjects <- rename(subjects, subjectID =V1)
     
     # data sets
     setTraining <- read.table("./train/X_train.txt",sep="\t",strip.white=TRUE)
@@ -34,7 +34,7 @@ run_analysis <- function(){
     labelsTest <- read.table("./test/y_test.txt",sep="\t")
     labelsTrain <- read.table("./train/y_train.txt",sep="\t")
     activities <- rbind(labelsTrain,labelsTest)
-    activities <- rename(activities,c(V1 = "activityID"))
+    activities <- rename(activities, activityID=V1)
     # read the activity labels
     activityLabels <- read.table("./activity_labels.txt",sep="\t",stringsAsFactors=FALSE)
     # let's separate the id of the description
